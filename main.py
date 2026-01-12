@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from datetime import datetime
 import os
 import sys
+import openpyxl # Explicit so it is recognized by pyinstaller. Could also add to main.spec
 
 # Get the path of the executable we are going to create
 application_path = os.path.dirname(sys.executable)
@@ -69,6 +70,6 @@ final_path = os.path.join(application_path , file_name)
 try:
     df.to_excel(final_path, index=False)
 except PermissionError:
-    print('CLOSE EXCEL DUMBASS')
+    print('CLOSE EXCEL DUDE')
 
 driver.quit()
