@@ -11,7 +11,7 @@ import sys
 application_path = os.path.dirname(sys.executable)
 
 now = datetime.now()
-month_day_year = now.strftime(r'%m%d%Y')
+month_day_year = now.strftime(r'%m%d%Y') # MMDDYYYY
 
 url = "https://ground.news/"
 path = r"C:\Users\thai\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe"
@@ -59,17 +59,16 @@ for container in containers:
 # Creating a dictionary to turn into a DataFrame
 dict = {'headline': headlines, 'coverage': coverages, 'link': links}
 df = pd.DataFrame(dict)
-
 # Only keeps rows where condition is True (non-empty)
 df = df[df['headline'] != '']
 
 file_name = f'headlines-{month_day_year}.xlsx'
-os.path.join(application_path , file_name)
+# Creating a path by joining two path variables to avoid \/
+final_path = os.path.join(application_path , file_name)
 
 try:
-    df.to_excel(f'excel/headlines-{month_day_year}.xlsx', index=False)
+    df.to_excel(final_path, index=False)
 except PermissionError:
     print('CLOSE EXCEL DUMBASS')
-
 
 driver.quit()
