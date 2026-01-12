@@ -7,6 +7,8 @@ from datetime import datetime
 import os
 import sys
 import openpyxl # Explicit so it is recognized by pyinstaller. Could also add to main.spec
+from openpyxl import load_workbook
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 # Get the path of the executable we are going to create
 application_path = os.path.dirname(sys.executable)
@@ -68,7 +70,21 @@ file_name = f'headlines-{month_day_year}.xlsx'
 final_path = os.path.join(application_path , file_name)
 
 try:
-    df.to_excel(final_path, index=False)
+    df.to_excel(final_path, index=False, sheet_name="Headlines")
+
+    # Format as a table
+    workbook = load_workbook(final_path)
+    worksheet = workbook.active
+
+    # Define table range
+    tab = Table(displayName="HeadlinesTable", ref=f"A1:{chr(64 + len(df.columns))}{len(df) + 1}")
+    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
+                           showLastColumn=False, showRowStripes=True, showColumnStripes=False)
+    tab.tableStyleInfo = style
+    worksheet.add_table(tab)
+
+    workbook.save(final_path)
+
 except PermissionError:
     print('CLOSE EXCEL DUDE')
 
