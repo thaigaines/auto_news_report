@@ -72,19 +72,6 @@ final_path = os.path.join(application_path , file_name)
 try:
     df.to_excel(final_path, index=False, sheet_name="Headlines")
 
-    # Format as a table
-    workbook = load_workbook(final_path)
-    worksheet = workbook.active
-
-    # Define table range
-    tab = Table(displayName="HeadlinesTable", ref=f"A1:{chr(64 + len(df.columns))}{len(df) + 1}")
-    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False,
-                           showLastColumn=False, showRowStripes=True, showColumnStripes=False)
-    tab.tableStyleInfo = style
-    worksheet.add_table(tab)
-
-    workbook.save(final_path)
-
 except PermissionError:
     print('CLOSE EXCEL DUDE')
 
