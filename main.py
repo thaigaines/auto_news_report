@@ -1,14 +1,16 @@
 # Ground News Top News Stories
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
 import pandas as pd
+from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options # Changes default selenium options
 from selenium.webdriver.chrome.service import Service
-from datetime import datetime
-import os
-import sys
 import openpyxl # Explicit so it is recognized by pyinstaller. Could also add to main.spec
-from openpyxl import load_workbook
-from openpyxl.worksheet.table import Table, TableStyleInfo
+
 
 # Get the path of the executable we are going to create
 application_path = os.path.dirname(sys.executable)
@@ -17,13 +19,11 @@ now = datetime.now()
 month_day_year = now.strftime(r'%m%d%Y') # MMDDYYYY
 
 url = "https://ground.news/"
-path = r"C:\Users\thai\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe"
-
+path = Path.home() / "Downloads" / "chromedriver-win64" / "chromedriver-win64" / "chromedriver.exe"
 
 # headless-mode (doesn't open tab)
 options = Options()
 options.add_argument('--headless')
-
 service = Service(executable_path=path)
 
 driver = webdriver.Chrome(service=service, options=options)
@@ -37,7 +37,7 @@ headlines = []
 coverages = []
 links = []
 
-# click through home button
+# Click through home button
 close_button = driver.find_element(by="xpath", value="//button[contains(text(), 'Ground News homepage')]").click()
 
 for container in containers:
@@ -59,18 +59,19 @@ for container in containers:
     links.append(link)
 
 
-# Creating a dictionary to turn into a DataFrame
+# Creating a dictionary to convert to df
 dict = {'headline': headlines, 'coverage': coverages, 'link': links}
 df = pd.DataFrame(dict)
 # Only keeps rows where condition is True (non-empty)
 df = df[df['headline'] != '']
 
 file_name = f'headlines-{month_day_year}.xlsx'
-# Creating a path by joining two path variables to avoid \/
-final_path = os.path.join(application_path , file_name)
+# Creating a path by joining two path variables
+final_path = Path(application_path) / file_name
 
 try:
     df.to_excel(final_path, index=False, sheet_name="Headlines")
+    print(f"{file_name} was created successfully.")
 
 except PermissionError:
     print('CLOSE EXCEL DUDE')
