@@ -1,6 +1,5 @@
 # Ground News Top News Stories
 import os
-import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -12,8 +11,8 @@ from selenium.webdriver.chrome.service import Service
 import openpyxl # Explicit so it is recognized by pyinstaller. Could also add to main.spec
 
 
-# Get the path of the executable we are going to create
-application_path = os.path.dirname(sys.executable)
+# Get the path of the current file's parent directory
+application_path = Path(__file__).parent
 
 now = datetime.now()
 month_day_year = now.strftime(r'%m%d%Y') # MMDDYYYY
